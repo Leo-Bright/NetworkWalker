@@ -64,9 +64,9 @@ def main(network_input="sanfrancisco/network/sf_roadnetwork",
 
 
 
-main(network_input="tokyo/network/tokyo.network",
-     intersection_input="tokyo/dataset/nodes_intersection.json",
-     walks_output="tokyo/network/tokyo_random_wn10_wl640.walks",
-     node_type_output="tokyo/dataset/node_type.txt",
+main(network_input="sanfrancisco/network/sf_roadnetwork",
+     intersection_input="sanfrancisco/dataset/nodes_intersection.json",
+     walks_output="sanfrancisco/network/sanfrancisco_random_wn10_wl640.walks",
+     node_type_output="sanfrancisco/dataset/node_type.txt",
      walk_num=10, walk_length=640
      )

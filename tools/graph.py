@@ -4,20 +4,16 @@
 """Graph utilities."""
 
 import logging
-import sys
 from io import open
-from os import path
 from time import time
-from glob import glob
 from six.moves import range, zip, zip_longest
 from six import iterkeys
 from collections import defaultdict, Iterable
 import random
-from random import shuffle
 from itertools import product,permutations
 from scipy.io import loadmat
 from scipy.sparse import issparse
-from dijkstra import dijkstra
+from .dijkstra import dijkstra
 
 
 logger = logging.getLogger("deepwalk")
