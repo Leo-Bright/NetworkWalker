@@ -92,5 +92,5 @@ def walk_process(pid, nodes, G, walk_num, output):
 
 main(network_input="sanfrancisco/network/sf_roadnetwork",
      walks_output="sanfrancisco/network/sf_shortest_path.walks",
-     walk_num=10, num_process=2)
+     walk_num=100, num_process=2)
 

@@ -272,7 +272,7 @@ def build_shortest_path(G, nodes, num_paths):
     visited.add(node)
     node_walks = []
     find_count = 0            # find 20 times and then return
-    while len(node_walks) < num_paths and find_count < 20:
+    while len(node_walks) < num_paths and find_count < 5 * num_paths:
       find_count += 1
       y = random.randint(0, len(nodes) - 1)
       node_y = nodes[y]
