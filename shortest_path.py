@@ -38,8 +38,8 @@ def main(network_input="sanfrancisco/network/sf_roadnetwork",
     if num_process > 1:
         processes = []
         for i in range(num_process):
-            start = G_nodes_size / num_process * i
-            end = G_nodes_size / num_process * (i + 1)
+            start = int(G_nodes_size / num_process * i)
+            end = int(G_nodes_size / num_process * (i + 1))
             if i == num_process - 1:
                 end = G_nodes_size
             process_nodes = nodes[start:end]
