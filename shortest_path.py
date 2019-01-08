@@ -64,7 +64,6 @@ def main(network_input="sanfrancisco/network/sf_roadnetwork",
     for index, file in enumerate(filename_list):
         input_file_name = source_path + '/' + file
         input_file = open(input_file_name, 'r')
-        shutil.copyfileobj(input_file, output_file)
         if index == 0:
             with open(walks_output, 'w+') as output_file:
                 shutil.copyfileobj(input_file, output_file)
