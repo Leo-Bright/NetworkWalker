@@ -62,7 +62,8 @@ def main(network_input="sanfrancisco/network/sf_roadnetwork",
     filename_list.sort(key=lambda x: x.rsplit('.', 1)[1])
 
     for index, file in enumerate(filename_list):
-        input_file = open(source_path + file, 'r')
+        input_file_name = source_path + '/' + file
+        input_file = open(input_file_name, 'r')
         shutil.copyfileobj(input_file, output_file)
         if index == 0:
             with open(walks_output, 'w+') as output_file:
@@ -71,9 +72,9 @@ def main(network_input="sanfrancisco/network/sf_roadnetwork",
             with open(walks_output, 'a') as output_file:
                 shutil.copyfileobj(input_file, output_file)
         input_file.close()
-        if os.path.exists(source_path + file):
-            print("Deleting part file:", source_path + file)
-            os.remove(source_path + file)
+        if os.path.exists(input_file_name):
+            print("Deleting part file:", input_file_name)
+            os.remove(input_file_name)
 
 
 
