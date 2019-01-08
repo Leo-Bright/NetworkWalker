@@ -5,6 +5,8 @@ from tools import graph
 import random
 import sys
 from multiprocessing import Process
+import shutil
+import os
 
 __author__ = 'Leo'
 
@@ -32,8 +34,6 @@ def main(network_input="sanfrancisco/network/sf_roadnetwork",
     print("Total number of walks: {}".format(num_walks))
 
     print("Walking...")
-    # walks = graph.build_deepwalk_corpus(G, num_paths=walk_num,
-    #                                     path_length=walk_length, alpha=0, rand=random.Random(0))
 
     if num_process > 1:
         processes = []
@@ -55,12 +55,39 @@ def main(network_input="sanfrancisco/network/sf_roadnetwork",
         process_nodes = nodes[:]
         walk_process(0, process_nodes, G, walk_num, walks_output)
 
-    # everynode_walks = graph.build_shortest_path(G, num_paths=walk_num, rand=random.Random(0))
+    print("Merging results...")
+    source_path, regex = walks_output.rsplit('/', 1)
+    regex = regex + '_part'
+    filename_list = get_filename_list(source_path, regex)
+    filename_list.sort(key=lambda x: x.rsplit('.', 1)[1])
+
+    for index, file in enumerate(filename_list):
+        input_file = open(source_path + file, 'r')
+        shutil.copyfileobj(input_file, output_file)
+        if index == 0:
+            with open(walks_output, 'w+') as output_file:
+                shutil.copyfileobj(input_file, output_file)
+        else:
+            with open(walks_output, 'a') as output_file:
+                shutil.copyfileobj(input_file, output_file)
+        input_file.close()
+        if os.path.exists(source_path + file):
+            print("Deleting part file:", source_path + file)
+            os.remove(source_path + file)
 
 
-    # random_walk_json = network_input.rsplit('/', 1)[0] + '/tmp_walk_fname.json'
-    # with open(random_walk_json, 'w+') as tmp_walks:
-    #     tmp_walks.write(json.dumps(walks))
+
+    print("Done!")
+
+
+def get_filename_list(src_path, regex):
+    import os
+    result = []
+    filenames = os.listdir(src_path)
+    for file_name in filenames:
+        if file_name.find(regex) >= 0:
+            result.append(file_name)
+    return result
 
 
 def walk_process(pid, nodes, G, walk_num, output):
@@ -89,6 +116,7 @@ def walk_process(pid, nodes, G, walk_num, output):
                 sys.stdout.flush()
 
     print("Walking done...")
+
 
 main(network_input="sanfrancisco/network/sf_roadnetwork",
      walks_output="sanfrancisco/network/sf_shortest_path.walks",
