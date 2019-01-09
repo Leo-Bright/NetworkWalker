@@ -254,34 +254,35 @@ def build_deepwalk_corpus(G, num_paths, path_length, alpha=0,
 
 def build_deepwalk_corpus_iter(G, num_paths, path_length, alpha=0,
                       rand=random.Random(0)):
-  walks = []
 
-  nodes = list(G.nodes())
+    nodes = list(G.nodes())
 
-  for cnt in range(num_paths):
-    rand.shuffle(nodes)
-    for node in nodes:
-      yield G.random_walk(path_length, rand=rand, alpha=alpha, start=node)
+    for cnt in range(num_paths):
+      rand.shuffle(nodes)
+      for node in nodes:
+        yield G.random_walk(path_length, rand=rand, alpha=alpha, start=node)
 
 
-def build_shortest_path(G, nodes, num_paths):
+def build_shortest_path(G, nodes, start, end, num_paths):
 
-  for node in nodes:
-    dis, path = dijkstra(G.shortest_path, node)
-    visited = set()
-    visited.add(node)
-    node_walks = []
-    find_count = 0            # find 20 times and then return
-    while len(node_walks) < num_paths and find_count < 5 * num_paths:
-      find_count += 1
-      y = random.randint(0, len(nodes) - 1)
-      node_y = nodes[y]
-      if node_y in visited:
-        continue
-      if dis[node_y] < float("inf"):
-        node_walks.append(path[node_y])
-      visited.add(node_y)
-    yield node_walks
+    nodes_in_process = nodes[start:end]
+
+    for node in nodes_in_process:
+        dis, path = dijkstra(G.shortest_path, node)
+        visited = set()
+        visited.add(node)
+        node_walks = []
+        find_count = 0            # find 20 times and then return
+        while len(node_walks) < num_paths and find_count < 5 * num_paths:
+            y = random.randint(0, len(nodes) - 1)
+            node_y = nodes[y]
+            if node_y in visited:
+                find_count += 1
+                continue
+            if dis[node_y] < float("inf"):
+                node_walks.append(path[node_y])
+            visited.add(node_y)
+        yield node_walks
 
 
 def clique(size):

@@ -42,9 +42,8 @@ def main(network_input="sanfrancisco/network/sf_roadnetwork",
             end = int(G_nodes_size / num_process * (i + 1))
             if i == num_process - 1:
                 end = G_nodes_size
-            process_nodes = nodes[start:end]
             p = Process(target=walk_process,
-                        args=(i, process_nodes, G, walk_num, walks_output))
+                        args=(i, nodes, start, end, G, walk_num, walks_output))
             processes.append(p)
 
         for p in processes:
@@ -52,8 +51,7 @@ def main(network_input="sanfrancisco/network/sf_roadnetwork",
         for p in processes:
             p.join()
     else:
-        process_nodes = nodes[:]
-        walk_process(0, process_nodes, G, walk_num, walks_output)
+        walk_process(0, nodes, G, walk_num, walks_output)
 
     print("Merging results...")
     source_path, regex = walks_output.rsplit('/', 1)
@@ -83,34 +81,34 @@ def main(network_input="sanfrancisco/network/sf_roadnetwork",
 def get_filename_list(src_path, regex):
     import os
     result = []
-    filenames = os.listdir(src_path)
-    for file_name in filenames:
+    file_names = os.listdir(src_path)
+    for file_name in file_names:
         if file_name.find(regex) >= 0:
             result.append(file_name)
     return result
 
 
-def walk_process(pid, nodes, G, walk_num, output):
+def walk_process(pid, nodes, start, end, G, walk_num, output):
 
     output = output + '_part' + str(pid)
 
-    nodes_in_process= len(nodes)
+    nodes_count_in_process = end - start
 
-    everynode_walks = graph.build_shortest_path(G, nodes, num_paths=walk_num)
+    every_node_walks = graph.build_shortest_path(G, nodes, start, end, num_paths=walk_num)
 
     with open(output, 'w+') as f:
         node_count = 0
-        for node_walks in everynode_walks:
+        for node_walks in every_node_walks:
             for walk in node_walks:
                 f.write('%s\n' % ' 0 '.join(map(str, walk)))
             node_count += 1
             if node_count % 50 == 0:
-                ratio = float(node_count) / nodes_in_process
+                ratio = float(node_count) / nodes_count_in_process
                 sys.stdout.write(("\rPID <%d> walking ratio is :"
                                   "%d/%d (%.2f%%) "
                                   "" % (pid,
                                         node_count,
-                                        nodes_in_process,
+                                        nodes_count_in_process,
                                         ratio * 100,
                                         )))
                 sys.stdout.flush()
