@@ -92,21 +92,24 @@ def get_filename_list(src_path, regex):
 def walk_process(pid, nodes, start, end, G, output):
 
     regex_list = ['40', '80', '160', '320']
+    files = {}
+    for s in regex_list:
+        tmp = output + '_' + s + '_part' + str(pid)
+        if os.path.exists(tmp):
+            os.remove(tmp)
+        f = open(tmp, 'a')
+        files[s] = f
 
     nodes_count_in_process = end - start
 
     every_node_walks = graph.build_shortest_path(G, nodes, start, end)
 
     node_count = 0
-    for node_walks in every_node_walks:
 
+    for node_walks in every_node_walks:
         for s in regex_list:
-            tmp = output + '_' + s + '_part' + str(pid)
-            if os.path.exists(tmp):
-                os.remove(tmp)
-            with open(tmp, 'a') as f:
-                for walk in node_walks[s]:
-                    f.write('%s\n' % ' 0 '.join(map(str, walk)))
+            for walk in node_walks[s]:
+                files[s].write('%s\n' % ' 0 '.join(map(str, walk)))
 
         node_count += 1
         if node_count % 50 == 0:
@@ -120,6 +123,8 @@ def walk_process(pid, nodes, start, end, G, output):
                                     )))
             sys.stdout.flush()
 
+    for s in regex_list:
+        files[s].close
     print("Walking done...")
 
 
