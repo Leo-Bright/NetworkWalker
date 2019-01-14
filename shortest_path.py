@@ -13,7 +13,7 @@ __author__ = 'Leo'
 
 def main(network_input="sanfrancisco/network/sf_roadnetwork",
          walks_output="res/sf_roadnetwork.walks",
-         walk_num=2, num_process=1):
+         num_process=1):
 
     print('Load a road Graph...')
 
@@ -29,7 +29,7 @@ def main(network_input="sanfrancisco/network/sf_roadnetwork",
 
     print("Number of nodes: {}".format(G_nodes_size))
 
-    num_walks = len(G.nodes()) * walk_num
+    num_walks = len(G.nodes()) * 320
 
     print("Total number of walks: {}".format(num_walks))
 
@@ -43,7 +43,7 @@ def main(network_input="sanfrancisco/network/sf_roadnetwork",
             if i == num_process - 1:
                 end = G_nodes_size
             p = Process(target=walk_process,
-                        args=(i, nodes, start, end, G, walk_num, walks_output))
+                        args=(i, nodes, start, end, G, walks_output))
             processes.append(p)
 
         for p in processes:
@@ -51,30 +51,34 @@ def main(network_input="sanfrancisco/network/sf_roadnetwork",
         for p in processes:
             p.join()
     else:
-        walk_process(0, nodes, G, walk_num, walks_output)
+        walk_process(0, nodes, 0, G_nodes_size, G, walks_output)
 
     print("Merging results...")
+    # regex_40 = regex + '_40_part'
+    # regex_80 = regex + '_80_part'
+    # regex_160 = regex + '_160_part'
+    # regex_320 = regex + '_320_part'
+    regex_list = ['_40', '_80', '_160', '_320']
     source_path, regex = walks_output.rsplit('/', 1)
-    regex = regex + '_part'
-    filename_list = get_filename_list(source_path, regex)
-    filename_list.sort(key=lambda x: x.rsplit('.', 1)[1])
 
-    for index, file in enumerate(filename_list):
-        input_file_name = source_path + '/' + file
-        input_file = open(input_file_name, 'r')
-        if index == 0:
-            with open(walks_output, 'w+') as output_file:
-                shutil.copyfileobj(input_file, output_file)
-        else:
-            with open(walks_output, 'a') as output_file:
-                shutil.copyfileobj(input_file, output_file)
-        input_file.close()
-        if os.path.exists(input_file_name):
-            print("Deleting part file:", input_file_name)
-            os.remove(input_file_name)
+    for str in regex_list:
+        _regex = regex + str
+        filename_list = get_filename_list(source_path, _regex)
+        filename_list.sort(key=lambda x: x.rsplit('.', 1)[1])
 
-
-
+        for index, file in enumerate(filename_list):
+            input_file_name = source_path + '/' + file
+            input_file = open(input_file_name, 'r')
+            if index == 0:
+                with open(walks_output + str, 'w+') as output_file:
+                    shutil.copyfileobj(input_file, output_file)
+            else:
+                with open(walks_output + str, 'a') as output_file:
+                    shutil.copyfileobj(input_file, output_file)
+            input_file.close()
+            if os.path.exists(input_file_name):
+                print("Deleting part file:", input_file_name)
+                os.remove(input_file_name)
     print("Done!")
 
 
@@ -88,35 +92,47 @@ def get_filename_list(src_path, regex):
     return result
 
 
-def walk_process(pid, nodes, start, end, G, walk_num, output):
+def walk_process(pid, nodes, start, end, G, output):
 
-    output = output + '_part' + str(pid)
+    output_40 = output + '_40_part' + str(pid)
+    output_80 = output + '_80_part' + str(pid)
+    output_160 = output + '_160_part' + str(pid)
+    output_320 = output + '_320_part' + str(pid)
 
     nodes_count_in_process = end - start
 
-    every_node_walks = graph.build_shortest_path(G, nodes, start, end, num_paths=walk_num)
+    every_node_walks = graph.build_shortest_path(G, nodes, start, end)
 
-    with open(output, 'w+') as f:
-        node_count = 0
-        for node_walks in every_node_walks:
-            for walk in node_walks:
+    node_count = 0
+    for node_walks in every_node_walks:
+        with open(output_40, 'w+') as f:
+            for walk in node_walks['40']:
                 f.write('%s\n' % ' 0 '.join(map(str, walk)))
-            node_count += 1
-            if node_count % 50 == 0:
-                ratio = float(node_count) / nodes_count_in_process
-                sys.stdout.write(("\rPID <%d> walking ratio is :"
-                                  "%d/%d (%.2f%%) "
-                                  "" % (pid,
-                                        node_count,
-                                        nodes_count_in_process,
-                                        ratio * 100,
-                                        )))
-                sys.stdout.flush()
+        with open(output_80, 'w+') as f:
+            for walk in node_walks['80']:
+                f.write('%s\n' % ' 0 '.join(map(str, walk)))
+        with open(output_160, 'w+') as f:
+            for walk in node_walks['160']:
+                f.write('%s\n' % ' 0 '.join(map(str, walk)))
+        with open(output_320, 'w+') as f:
+            for walk in node_walks['320']:
+                f.write('%s\n' % ' 0 '.join(map(str, walk)))
+        node_count += 1
+        if node_count % 50 == 0:
+            ratio = float(node_count) / nodes_count_in_process
+            sys.stdout.write(("\rPID <%d> walking ratio is :"
+                              "%d/%d (%.2f%%) "
+                              "" % (pid,
+                                    node_count,
+                                    nodes_count_in_process,
+                                    ratio * 100,
+                                    )))
+            sys.stdout.flush()
 
     print("Walking done...")
 
 
 main(network_input="sanfrancisco/network/sanfrancisco.network",
-     walks_output="sanfrancisco/network/sf_shortest_wn160.walks",
-     walk_num=160, num_process=44)
+     walks_output="sanfrancisco/network/sanfrancisco.walks",
+     num_process=44)
 
