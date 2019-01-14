@@ -58,28 +58,28 @@ def main(network_input="sanfrancisco/network/sf_roadnetwork",
     # regex_80 = regex + '_80_part'
     # regex_160 = regex + '_160_part'
     # regex_320 = regex + '_320_part'
-    regex_list = ['_40', '_80', '_160', '_320']
-    source_path, regex = walks_output.rsplit('/', 1)
-
-    for str in regex_list:
-        _regex = regex + str
-        filename_list = get_filename_list(source_path, _regex)
-        filename_list.sort(key=lambda x: x.rsplit('.', 1)[1])
-
-        for index, file in enumerate(filename_list):
-            input_file_name = source_path + '/' + file
-            input_file = open(input_file_name, 'r')
-            if index == 0:
-                with open(walks_output + str, 'w+') as output_file:
-                    shutil.copyfileobj(input_file, output_file)
-            else:
-                with open(walks_output + str, 'a') as output_file:
-                    shutil.copyfileobj(input_file, output_file)
-            input_file.close()
-            if os.path.exists(input_file_name):
-                print("Deleting part file:", input_file_name)
-                os.remove(input_file_name)
-    print("Done!")
+    # regex_list = ['_40', '_80', '_160', '_320']
+    # source_path, regex = walks_output.rsplit('/', 1)
+    #
+    # for str in regex_list:
+    #     _regex = regex + str
+    #     filename_list = get_filename_list(source_path, _regex)
+    #     filename_list.sort(key=lambda x: x.rsplit('.', 1)[1])
+    #
+    #     for index, file in enumerate(filename_list):
+    #         input_file_name = source_path + '/' + file
+    #         input_file = open(input_file_name, 'r')
+    #         if index == 0:
+    #             with open(walks_output + str, 'w+') as output_file:
+    #                 shutil.copyfileobj(input_file, output_file)
+    #         else:
+    #             with open(walks_output + str, 'a') as output_file:
+    #                 shutil.copyfileobj(input_file, output_file)
+    #         input_file.close()
+    #         if os.path.exists(input_file_name):
+    #             print("Deleting part file:", input_file_name)
+    #             os.remove(input_file_name)
+    # print("Done!")
 
 
 def get_filename_list(src_path, regex):
