@@ -54,32 +54,29 @@ def main(network_input="sanfrancisco/network/sf_roadnetwork",
         walk_process(0, nodes, 0, G_nodes_size, G, walks_output)
 
     print("Merging results...")
-    # regex_40 = regex + '_40_part'
-    # regex_80 = regex + '_80_part'
-    # regex_160 = regex + '_160_part'
-    # regex_320 = regex + '_320_part'
-    # regex_list = ['_40', '_80', '_160', '_320']
-    # source_path, regex = walks_output.rsplit('/', 1)
-    #
-    # for str in regex_list:
-    #     _regex = regex + str
-    #     filename_list = get_filename_list(source_path, _regex)
-    #     filename_list.sort(key=lambda x: x.rsplit('.', 1)[1])
-    #
-    #     for index, file in enumerate(filename_list):
-    #         input_file_name = source_path + '/' + file
-    #         input_file = open(input_file_name, 'r')
-    #         if index == 0:
-    #             with open(walks_output + str, 'w+') as output_file:
-    #                 shutil.copyfileobj(input_file, output_file)
-    #         else:
-    #             with open(walks_output + str, 'a') as output_file:
-    #                 shutil.copyfileobj(input_file, output_file)
-    #         input_file.close()
-    #         if os.path.exists(input_file_name):
-    #             print("Deleting part file:", input_file_name)
-    #             os.remove(input_file_name)
-    # print("Done!")
+
+    regex_list = ['_40', '_80', '_160', '_320']
+    source_path, regex = walks_output.rsplit('/', 1)
+
+    for str in regex_list:
+        _regex = regex + str
+        filename_list = get_filename_list(source_path, _regex)
+        filename_list.sort(key=lambda x: x.rsplit('.', 1)[1])
+
+        for index, file in enumerate(filename_list):
+            input_file_name = source_path + '/' + file
+            input_file = open(input_file_name, 'r')
+            if index == 0:
+                with open(walks_output + str, 'w+') as output_file:
+                    shutil.copyfileobj(input_file, output_file)
+            else:
+                with open(walks_output + str, 'a') as output_file:
+                    shutil.copyfileobj(input_file, output_file)
+            input_file.close()
+            if os.path.exists(input_file_name):
+                print("Deleting part file:", input_file_name)
+                os.remove(input_file_name)
+    print("Done!")
 
 
 def get_filename_list(src_path, regex):
@@ -94,10 +91,7 @@ def get_filename_list(src_path, regex):
 
 def walk_process(pid, nodes, start, end, G, output):
 
-    output_40 = output + '_40_part' + str(pid)
-    output_80 = output + '_80_part' + str(pid)
-    output_160 = output + '_160_part' + str(pid)
-    output_320 = output + '_320_part' + str(pid)
+    regex_list = ['40', '80', '160', '320']
 
     nodes_count_in_process = end - start
 
@@ -105,18 +99,15 @@ def walk_process(pid, nodes, start, end, G, output):
 
     node_count = 0
     for node_walks in every_node_walks:
-        with open(output_40, 'w+') as f:
-            for walk in node_walks['40']:
-                f.write('%s\n' % ' 0 '.join(map(str, walk)))
-        with open(output_80, 'w+') as f:
-            for walk in node_walks['80']:
-                f.write('%s\n' % ' 0 '.join(map(str, walk)))
-        with open(output_160, 'w+') as f:
-            for walk in node_walks['160']:
-                f.write('%s\n' % ' 0 '.join(map(str, walk)))
-        with open(output_320, 'w+') as f:
-            for walk in node_walks['320']:
-                f.write('%s\n' % ' 0 '.join(map(str, walk)))
+
+        for str in regex_list:
+            tmp = output + '_' + str + '_part' + str(pid)
+            if os.path.exists(tmp):
+                os.remove(tmp)
+            with open(tmp, 'a') as f:
+                for walk in node_walks[str]:
+                    f.write('%s\n' % ' 0 '.join(map(str, walk)))
+
         node_count += 1
         if node_count % 50 == 0:
             ratio = float(node_count) / nodes_count_in_process
@@ -134,5 +125,5 @@ def walk_process(pid, nodes, start, end, G, output):
 
 main(network_input="sanfrancisco/network/sanfrancisco.network",
      walks_output="sanfrancisco/network/sanfrancisco.walks",
-     num_process=44)
+     num_process=42)
 
