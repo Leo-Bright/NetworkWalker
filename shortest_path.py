@@ -58,8 +58,8 @@ def main(network_input="sanfrancisco/network/sf_roadnetwork",
     regex_list = ['_40', '_80', '_160', '_320']
     source_path, regex = walks_output.rsplit('/', 1)
 
-    for str in regex_list:
-        _regex = regex + str
+    for s in regex_list:
+        _regex = regex + s
         filename_list = get_filename_list(source_path, _regex)
         filename_list.sort(key=lambda x: x.rsplit('.', 1)[1])
 
@@ -67,10 +67,10 @@ def main(network_input="sanfrancisco/network/sf_roadnetwork",
             input_file_name = source_path + '/' + file
             input_file = open(input_file_name, 'r')
             if index == 0:
-                with open(walks_output + str, 'w+') as output_file:
+                with open(walks_output + s, 'w+') as output_file:
                     shutil.copyfileobj(input_file, output_file)
             else:
-                with open(walks_output + str, 'a') as output_file:
+                with open(walks_output + s, 'a') as output_file:
                     shutil.copyfileobj(input_file, output_file)
             input_file.close()
             if os.path.exists(input_file_name):
@@ -100,12 +100,12 @@ def walk_process(pid, nodes, start, end, G, output):
     node_count = 0
     for node_walks in every_node_walks:
 
-        for str in regex_list:
-            tmp = output + '_' + str + '_part' + str(pid)
+        for s in regex_list:
+            tmp = output + '_' + s + '_part' + str(pid)
             if os.path.exists(tmp):
                 os.remove(tmp)
             with open(tmp, 'a') as f:
-                for walk in node_walks[str]:
+                for walk in node_walks[s]:
                     f.write('%s\n' % ' 0 '.join(map(str, walk)))
 
         node_count += 1
