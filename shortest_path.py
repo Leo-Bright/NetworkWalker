@@ -128,7 +128,7 @@ def walk_process(pid, nodes, start, end, G, output):
     print("Walking done...")
 
 
-main(network_input="sanfrancisco/network/sanfrancisco.network",
-     walks_output="sanfrancisco/network/sanfrancisco.walks",
+main(network_input="sanfrancisco/network/sanfrancisco_distance.network",
+     walks_output="sanfrancisco/network/sanfrancisco_shortest_distance.walks",
      num_process=42)
 
