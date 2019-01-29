@@ -182,13 +182,6 @@ class Graph(defaultdict):
       for to_node in self[from_node]:
         self.shortest_path[from_node][to_node] = {'path': [to_node], 'cost': 1}
 
-  def init_shortest_path_v2(self, weight):
-    self.shortest_path = {}
-    for from_node in self:
-      self.shortest_path[from_node] = {}
-      for to_node in self[from_node]:
-        self.shortest_path[from_node][to_node] = weight[from_node][to_node]
-
   def _get_shortest_path(self, end, start=None):
 
 
@@ -263,12 +256,12 @@ def build_deepwalk_corpus_iter(G, num_paths, path_length, alpha=0,
         yield G.random_walk(path_length, rand=rand, alpha=alpha, start=node)
 
 
-def build_shortest_path(G, nodes, start, end, max_walk_num=320):
+def build_shortest_path(road_weight, nodes, start, end, max_walk_num=320):
 
     nodes_in_process = nodes[start:end]
 
     for node in nodes_in_process:
-        dis, path = dijkstra(G.shortest_path, node)
+        dis, path = dijkstra(road_weight, node)
         visited = set()
         visited.add(node)
         node_walks = {}
@@ -387,10 +380,10 @@ def load_edgelist(file_, undirected=True):
         if y not in weight:
             weight[y] = {}
         weight[y][x] = w
-
   G.make_consistent()
-  G.init_shortest_path_v2(weight)
-  return G
+  road_weight = init_shortest_path(G, weight)
+  result = {'graph': G, 'weight': road_weight}
+  return result
 
 
 def load_matfile(file_, variable_name="network", undirected=True):
@@ -450,5 +443,16 @@ def from_adjlist_unchecked(adjlist):
         G[node] = neighbors
 
     return G
+
+
+def init_shortest_path(G, weight):
+    road_weight = {}
+    for from_node in G:
+        road_weight[from_node] = {}
+        for to_node in G[from_node]:
+            w = weight[from_node][to_node]
+            road_weight[from_node][to_node] = w
+
+    return road_weight
 
 

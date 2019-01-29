@@ -17,7 +17,11 @@ def main(network_input="sanfrancisco/network/sf_roadnetwork",
 
     print('Load a road Graph...')
 
-    G = graph.load_edgelist(network_input, undirected=True)
+    network = graph.load_edgelist(network_input, undirected=True)
+
+    G = network['graph']
+
+    road_weight = network['weight']
 
     print('Generate random walks...')
 
@@ -43,7 +47,7 @@ def main(network_input="sanfrancisco/network/sf_roadnetwork",
             if i == num_process - 1:
                 end = G_nodes_size
             p = Process(target=walk_process,
-                        args=(i, nodes, start, end, G, walks_output))
+                        args=(i, nodes, start, end, road_weight, walks_output))
             processes.append(p)
 
         for p in processes:
@@ -51,7 +55,7 @@ def main(network_input="sanfrancisco/network/sf_roadnetwork",
         for p in processes:
             p.join()
     else:
-        walk_process(0, nodes, 0, G_nodes_size, G, walks_output)
+        walk_process(0, nodes, 0, G_nodes_size, road_weight, walks_output)
 
     print("Merging results...")
 
@@ -89,7 +93,7 @@ def get_filename_list(src_path, regex):
     return result
 
 
-def walk_process(pid, nodes, start, end, G, output):
+def walk_process(pid, nodes, start, end, road_weight, output):
 
     regex_list = ['40', '80', '160', '320']
     files = {}
@@ -102,7 +106,7 @@ def walk_process(pid, nodes, start, end, G, output):
 
     nodes_count_in_process = end - start
 
-    every_node_walks = graph.build_shortest_path(G, nodes, start, end)
+    every_node_walks = graph.build_shortest_path(road_weight, nodes, start, end)
 
     node_count = 0
 
@@ -130,5 +134,5 @@ def walk_process(pid, nodes, start, end, G, output):
 
 main(network_input="sanfrancisco/network/sanfrancisco_distance.network",
      walks_output="sanfrancisco/network/sanfrancisco_shortest_distance.walks",
-     num_process=42)
+     num_process=1)
 
