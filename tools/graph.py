@@ -365,7 +365,13 @@ def load_edgelist(file_, undirected=True):
   weight = {}
   with open(file_) as f:
     for l in f:
-      x, y, w = l.strip().split()[:3]
+      items = l.strip().split()
+      if len(items) == 3:
+        x, y, w = items[:3]
+      elif len(items) == 2:
+        x, y = items[:2]
+        w = 1
+
       x = int(x)
       y = int(y)
       G[x].append(y)
