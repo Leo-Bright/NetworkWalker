@@ -16,8 +16,10 @@ def main(network_input="sanfrancisco/network/sf_roadnetwork",
          walk_num=10, walk_length=100):
 
   #  print 'Load a road Graph...'
-    G = graph.load_edgelist(network_input, undirected=True)
+    network = graph.load_edgelist(network_input, undirected=True)
   #  print 'Generate random walks...'
+
+    G = network['graph']
 
     print("Number of nodes: {}".format(len(G.nodes())))
 
@@ -63,10 +65,9 @@ def main(network_input="sanfrancisco/network/sf_roadnetwork",
             node_type_file.write(str(node) + ' ' + type + '\n')
 
 
-
-main(network_input="sanfrancisco/network/sf_roadnetwork",
+main(network_input="sanfrancisco/network/sanfrancisco.network",
      intersection_input="sanfrancisco/dataset/nodes_intersection.json",
-     walks_output="sanfrancisco/network/sanfrancisco_random_wn10_wl640.walks",
+     walks_output="sanfrancisco/network/sf_random_wn10_wl1280.walks",
      node_type_output="sanfrancisco/dataset/node_type.txt",
-     walk_num=10, walk_length=640
+     walk_num=10, walk_length=1280
      )
