@@ -11,13 +11,14 @@ def main(input_walk, node2segment_dict, output_walk):
 
 
 def get_segments(input_walk, node2segment):
-    for walk_line in input_walk:
-        nodes = walk_line.strip().split(' ')
-        if len(nodes) < 10:
-            continue
-        else:
-            segments = trans_node_to_segment(nodes, node2segment)
-            yield segments
+    with open(input_walk) as input_walk_file:
+        for walk_line in input_walk_file:
+            nodes = walk_line.strip().split(' ')
+            if len(nodes) < 10:
+                continue
+            else:
+                segments = trans_node_to_segment(nodes, node2segment)
+                yield segments
 
 
 def trans_node_to_segment(nodes, node2segment):
