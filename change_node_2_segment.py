@@ -24,9 +24,10 @@ def get_segments(input_walk, node2segment):
 def trans_node_to_segment(nodes, node2segment):
     segments = []
     last_node = None
-    for node in nodes:
+    for node in nodes[::2]:
         if last_node is not None:
-            segment = node2segment[last_node][node]
+            _segment = node2segment[last_node]
+            segment = _segment[node]
             segments.append(segment)
         last_node = node
     return segments
