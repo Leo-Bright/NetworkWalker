@@ -34,6 +34,6 @@ def trans_node_to_segment(nodes, node2segment):
 
 
 if __name__ == '__main__':
-    main('sanfrancisco/network/sf_random_wn10_wl1280.walks',
-         'sanfrancisco/network/sanfrancisco_nodes2segment.json',
-         'sanfrancisco/network/sf_random_wn10_wl1280.segments')
+    main(input_walk='sanfrancisco/network/sf_random_wn10_wl1280.walks',
+         node2segment_dict='sanfrancisco/network/sanfrancisco_nodes2segment.json',
+         output_walk='sanfrancisco/network/sf_random_wn10_wl1280.segments')
