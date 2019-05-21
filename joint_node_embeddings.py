@@ -42,15 +42,21 @@ def run(road_segments_file, node_embeddings_file, segment_embeddings_file, metho
                 continue
             node_embeddings[osmid] = node_vec
 
+    error_segments = 0
     with open(segment_embeddings_file, 'w+') as f:
         for key in road_segments:
             segment = road_segments[key]
             source_node = segment['source']
             target_node = segment['target']
-            source_node_embedding = node_embeddings[str(source_node)]
-            target_node_embedding = node_embeddings[str(target_node)]
-            segment_embedding = combine_embeddings([source_node_embedding, target_node_embedding], method)
-            f.write(key + ' %s\n' % ' '.join(map(str, segment_embedding)))
+            try:
+                source_node_embedding = node_embeddings[str(source_node)]
+                target_node_embedding = node_embeddings[str(target_node)]
+                segment_embedding = combine_embeddings([source_node_embedding, target_node_embedding], method)
+                f.write(key + ' %s\n' % ' '.join(map(str, segment_embedding)))
+            except:
+                print("this segment encounter error:", key, source_node, target_node)
+                error_segments += 1
+        print("How many segments can not find embedding:", error_segments)
 
 
 if __name__ == '__main__':
