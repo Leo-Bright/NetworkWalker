@@ -7,7 +7,16 @@ def main(input_walk, node2segment_dict, output_walk):
         node2segment = json.loads(node2segment_line)
     with open(output_walk, 'w+') as f:
         for segments in get_segments(input_walk, node2segment):
-            f.write('%s\n' % ' 0 '.join(map(str, segments)))
+            _segments = []
+            pointer = 0
+            for segment in segments:
+                if pointer == 0:
+                    _segments.append(segment)
+                    pointer += 1
+                elif _segments[pointer-1] != segment:
+                    _segments.append(segment)
+                    pointer += 1
+            f.write('%s\n' % ' 0 '.join(map(str, _segments)))
 
 
 def get_segments(input_walk, node2segment):
