@@ -10,10 +10,16 @@ def combine_embeddings(embeddings_list, method):
     if method == '+':
         result = matrix.sum(axis=0)
     elif method == '*':
-        matrix = np.abs(matrix)
-        matrix = np.log(matrix)
-        matrix = np.abs(matrix)
-        result = matrix.sum(axis=0)
+        result = np.ones(len(matrix[0]))
+
+        # matrix = np.abs(matrix)
+        # matrix = np.log(matrix)
+        # matrix = np.abs(matrix)
+        # result = matrix.sum(axis=0)
+
+        for i in range(matrix.shape[0]):
+            result *= matrix[i]
+        return result
     elif method == '&':
         result = np.append(matrix[0], matrix[-1])
     elif method == '-':
@@ -62,7 +68,7 @@ def run(road_segments_file, node_embeddings_file, segment_embeddings_file, metho
 if __name__ == '__main__':
 
     run(road_segments_file='sanfrancisco/dataset/all_road_segments_dict.sanfrancisco',
-        node_embeddings_file='sanfrancisco/embeddings/deepwalk/sf.embedding128',
-        segment_embeddings_file='sanfrancisco/embeddings/deepwalk/sf_roadsegment_plus.embedding128',
-        method='+',
+        node_embeddings_file='../linearSVC/sanfrancisco/embedding/deepwalk/sf.embedding128',
+        segment_embeddings_file='../linearSVC/sanfrancisco/embedding/deepwalk/sf_deepwalk_segment_128_multi.embedding',
+        method='*',
         )
