@@ -33,7 +33,7 @@ def main(network_input="sanfrancisco/network/sf_roadnetwork",
 
     print("Number of nodes: {}".format(G_nodes_size))
 
-    num_walks = len(G.nodes()) * 320
+    num_walks = len(G.nodes()) * 160
 
     print("Total number of walks: {}".format(num_walks))
 
@@ -59,7 +59,7 @@ def main(network_input="sanfrancisco/network/sf_roadnetwork",
 
     print("Merging results...")
 
-    regex_list = ['_40', '_80', '_160', '_320']
+    regex_list = ['_40', '_80', '_160']
     source_path, regex = walks_output.rsplit('/', 1)
 
     for s in regex_list:
@@ -95,7 +95,7 @@ def get_filename_list(src_path, regex):
 
 def walk_process(pid, nodes, start, end, road_weight, output):
 
-    regex_list = ['40', '80', '160', '320']
+    regex_list = ['40', '80', '160']
     files = {}
     for s in regex_list:
         tmp = output + '_' + s + '_part' + str(pid)

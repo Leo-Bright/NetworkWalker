@@ -256,7 +256,7 @@ def build_deepwalk_corpus_iter(G, num_paths, path_length, alpha=0,
         yield G.random_walk(path_length, rand=rand, alpha=alpha, start=node)
 
 
-def build_shortest_path(road_weight, nodes, start, end, max_walk_num=320):
+def build_shortest_path(road_weight, nodes, start, end, max_walk_num=160):
 
     nodes_in_process = nodes[start:end]
 
@@ -268,9 +268,8 @@ def build_shortest_path(road_weight, nodes, start, end, max_walk_num=320):
         node_walks_40 = []
         node_walks_80 = []
         node_walks_160 = []
-        node_walks_320 = []
         find_count = 0            # find 2 times and then return
-        while len(node_walks_320) < max_walk_num and find_count < 2 * max_walk_num:
+        while len(node_walks_160) < max_walk_num and find_count < 2 * max_walk_num:
             y = random.randint(0, len(nodes) - 1)
             node_y = nodes[y]
             if node_y in visited:
@@ -284,13 +283,11 @@ def build_shortest_path(road_weight, nodes, start, end, max_walk_num=320):
                     node_walks_80.append(p)
                 if len(node_walks_160) < 160:
                     node_walks_160.append(p)
-                node_walks_320.append(p)
 
             visited.add(node_y)
         node_walks['40'] = node_walks_40
         node_walks['80'] = node_walks_80
         node_walks['160'] = node_walks_160
-        node_walks['320'] = node_walks_320
         yield node_walks
 
 
