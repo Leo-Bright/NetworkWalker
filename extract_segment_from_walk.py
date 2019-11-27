@@ -7,12 +7,17 @@ def main(input_walk, node2segment_dict, segment_length, output):
         node2segment = json.loads(node2segment_line)
     segments_pair = set()
     for _, segments in get_segments(input_walk, node2segment):
-        size = len(segments)
-        for idx in range(size - 1):
-            t1 = (segments[idx], segments[idx + 1])
-            t2 = (segments[idx + 1], segments[idx])
-            if t2 not in segments_pair:
-                segments_pair.add(t1)
+        pointer = 0
+        for _ in segments:
+            if pointer == 0:
+                pointer += 1
+                continue
+            else:
+                t1 = (segments[pointer - 1], segments[pointer])
+                t2 = (segments[pointer], segments[pointer - 1])
+                if t2 not in segments_pair:
+                    segments_pair.add(t1)
+                pointer += 1
 
     length_dict = {}
     with open(segment_length) as length_file:
