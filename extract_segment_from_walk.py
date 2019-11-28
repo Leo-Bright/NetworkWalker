@@ -7,7 +7,7 @@ def main(input_walk, node2segment_dict, segment_length, output):
     with open(segment_length) as length_file:
         for line in length_file:
             seg, len = line.strip().split(' ')
-            length_dict[seg] = len
+            length_dict[str(seg)] = len
     print("length_dict load done!")
 
     with open(node2segment_dict) as node2segment_file:
@@ -33,10 +33,10 @@ def main(input_walk, node2segment_dict, segment_length, output):
     with open(output, 'w+') as output_file:
         for item in segments_pair:
             (seg_start, seg_end) = item
-            start_len = length_dict[seg_start]
-            end_len = length_dict[seg_end]
-            length = int(start_len) + int(end_len)
-            output_file.write(seg_start + ' ' + seg_end + ' ' + str(length))
+            start_len = length_dict[str(seg_start)]
+            end_len = length_dict[str(seg_end)]
+            length = float(start_len) + float(end_len)
+            output_file.write(str(seg_start) + ' ' + str(seg_end) + ' ' + str(length))
 
 
 def get_segments(input_walk, node2segment):
