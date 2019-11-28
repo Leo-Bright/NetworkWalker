@@ -36,7 +36,7 @@ def main(input_walk, node2segment_dict, segment_length, output):
             start_len = length_dict[str(seg_start)]
             end_len = length_dict[str(seg_end)]
             length = float(start_len) + float(end_len)
-            output_file.write(str(seg_start) + ' ' + str(seg_end) + ' ' + str(length))
+            output_file.write(str(seg_start) + ' ' + str(seg_end) + ' ' + str(length) + '\n')
 
 
 def get_segments(input_walk, node2segment):
