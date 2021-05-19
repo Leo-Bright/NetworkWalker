@@ -9,7 +9,7 @@ import json
 __author__ = 'Leo'
 
 
-def main(network_input="sanfrancisco/network/sf_roadnetwork",
+def random_walk(network_input="sanfrancisco/network/sf_roadnetwork",
          intersection_input="sanfrancisco/dataset/nodes_intersection.json",
          walks_output="res/sf_roadnetwork.walks",
          node_type_output="sanfrancisco/dataset/node_type.txt",
@@ -65,9 +65,11 @@ def main(network_input="sanfrancisco/network/sf_roadnetwork",
             node_type_file.write(str(node) + ' ' + type + '\n')
 
 
-main(network_input="sanfrancisco/network/sanfrancisco.network",
-     intersection_input="sanfrancisco/dataset/nodes_intersection.json",
-     walks_output="sanfrancisco/network/sf_random_wn10_wl1280.walks",
-     node_type_output="sanfrancisco/dataset/node_type.txt",
-     walk_num=10, walk_length=1280
-     )
+if __name__ == '__main__':
+    city_name = 'newyork'
+    random_walk(network_input=city_name + '/network/' + city_name + '.network',
+                intersection_input=city_name + '/dataset/nodes_intersection.json',
+                walks_output=city_name + '/network/' + city_name + '_random_wn10_wl1280.walks',
+                node_type_output=city_name + '/dataset/node_type.txt',
+                walk_num=10, walk_length=1280
+                )

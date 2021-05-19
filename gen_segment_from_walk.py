@@ -1,7 +1,7 @@
 import json
 
 
-def main(input_walk, node2segment_dict, segment_length, output):
+def gen_segment(input_walk, node2segment_dict, segment_length, output):
 
     length_dict = {}
     with open(segment_length) as length_file:
@@ -66,7 +66,7 @@ def trans_node_to_segment(nodes, node2segment):
 
 if __name__ == '__main__':
 
-    main(input_walk='sanfrancisco/network/sf_random_wn10_wl1280.walks',
+    gen_segment(input_walk='sanfrancisco/network/sf_random_wn10_wl1280.walks',
          node2segment_dict='sanfrancisco/network/sanfrancisco_nodes2segment.json',
          segment_length='sanfrancisco/network/sanfrancisco.length',
          output='sanfrancisco/network/sanfrancisco_segment.network',
