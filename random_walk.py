@@ -34,8 +34,13 @@ def random_walk(network_input="sanfrancisco/network/sf_roadnetwork",
     print("Walking...")
     walks = graph.build_deepwalk_corpus(G, num_paths=walk_num,
                                         path_length=walk_length, alpha=0, rand=random.Random(0))
+
+
+    nodes = set()
     with open(walks_output, 'w+') as f:
         for walk in walks:
+            for node in walk:
+                nodes.add(node)
             f.write('%s\n' % ' 0 '.join(map(str, walk)))
 
     print("Walking done...")
@@ -50,11 +55,6 @@ def random_walk(network_input="sanfrancisco/network/sf_roadnetwork",
             if node in node_set:
                 return type
         return '1'
-
-    nodes = set()
-    for walk in walks:
-        for node in walk:
-            nodes.add(node)
 
     sorted_nodes = list(nodes)
     sorted_nodes.sort()
