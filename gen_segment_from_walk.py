@@ -66,8 +66,10 @@ def trans_node_to_segment(nodes, node2segment):
 
 if __name__ == '__main__':
 
-    gen_segment(input_walk='sanfrancisco/network/sf_random_wn10_wl1280.walks',
-         node2segment_dict='sanfrancisco/network/sanfrancisco_nodes2segment.json',
-         segment_length='sanfrancisco/network/sanfrancisco.length',
-         output='sanfrancisco/network/sanfrancisco_segment.network',
+    city = 'newyork'
+
+    gen_segment(input_walk=city + '/network/sf_random_wn10_wl1280.walks',
+         node2segment_dict=city + '/network/' + city + '_nodes2segment.json',
+         segment_length=city + '/dataset/' + city + '.length',
+         output=city + '/network/' + city + '_segment.network',
          )
