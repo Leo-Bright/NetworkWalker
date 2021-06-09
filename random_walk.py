@@ -70,6 +70,6 @@ if __name__ == '__main__':
     random_walk(network_input=city_name + '/network/' + city_name + '.network',
                 intersection_input=city_name + '/dataset/nodes_intersection.json',
                 walks_output=city_name + '/network/' + city_name + '_random_wn10_wl1280.walks',
-                node_type_output=city_name + '/dataset/node_type.txt',
+                node_type_output=city_name + '/dataset/node_type.newyork',
                 walk_num=10, walk_length=1280
                 )
